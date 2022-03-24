@@ -2,46 +2,61 @@ Console.WriteLine("Guess a number between 1 and 1000 and I'll tell you if it's t
 double attempts = 0;
 double totAttempts = 0;
 double numberOfGames = 0;
+bool restart = true;
+bool attemptAgain = true;
+bool wrongAnswer = false;
 double avgAttempts;    //variables declared and initialized
-Restart:
-Random rd = new();
-int randomNum = rd.Next(1, 1000);   //generate random number and asign to randomNum
+do
+{
+    Random rd = new();
+    int randomNum = rd.Next(1, 1000);   
+    attemptAgain = true;
+    //generate random number and asign to randomNum
 
-Start:
-int num = Convert.ToInt32(Console.ReadLine());
-attempts++; //guess number and add attempt to score
-if (num == randomNum)
-    Console.WriteLine("That's correct! You used "+ attempts +" attempts");  //if correct
+    do
+    {
+        int num = Convert.ToInt32(Console.ReadLine());
+        attempts++; //guess number and add attempt to score
+        if (num == randomNum)
+        {      
+            attemptAgain = false;
+        Console.WriteLine("That's correct! You used {0} attempts", attempts);  //if correct
+    }
+        else if (num < randomNum)
+        {
+            Console.WriteLine("That's too small...");
+        }
 
-else if (num < randomNum)
-{
-    Console.WriteLine("That's too small...");
-    goto Start; //if to small, send back
-}
-
-else if (num > randomNum)
-{
-    Console.WriteLine("That's too large...");
-    goto Start; //if to large, send back
-}
-totAttempts += attempts;    //add attempts to total
-attempts = 0;   //reset attempts
-numberOfGames++;    //add to number of games
-avgAttempts = totAttempts / numberOfGames;  //calculate average attempts
-Console.WriteLine("You've played " + numberOfGames + " times and your average attempts is " +
-    avgAttempts + "\nWant to try again?"); //message with stats and try again
-wrongAnswer:
-string answer = Console.ReadLine();
-if (answer == "yes")
-{
-    Console.WriteLine("Start guessing!");
-    goto Restart;   //next round
-}   
-     if (answer == "no")
-    Console.WriteLine("Bye!");  //end program
-     else 
-{
-    Console.WriteLine("Didn't quite understand you there. Please answer with yes or no");    
-    goto wrongAnswer;   //ask again
-}
+        else if (num > randomNum)
+        {
+            Console.WriteLine("That's too large...");
+        }
+    } while (attemptAgain == true);
+    totAttempts += attempts;    //add attempts to total
+    attempts = 0;   //reset attempts
+    numberOfGames++;    //add to number of games
+    avgAttempts = totAttempts / numberOfGames;  //calculate average attempts
+    Console.WriteLine("You've played " + numberOfGames + " times and your average attempts is " +
+        avgAttempts + "\nWant to try again?"); //message with stats and try again
+    do
+    {
+        string answer = Console.ReadLine();
+        wrongAnswer = false;
+        if (answer == "yes")
+        {
+            Console.WriteLine("Start guessing!");
+            //next round
+        }
+        else if (answer == "no")
+        {
+            Console.WriteLine("Bye!");
+            restart = false;    //end program
+        }
+        else if (answer != "yes" && answer != "no")
+        {
+            Console.WriteLine("Didn't quite understand you there. Please answer with yes or no");
+            wrongAnswer = true;  //ask again
+        }
+    } while (wrongAnswer == true);
+} while (restart == true);
     Console.ReadLine();
