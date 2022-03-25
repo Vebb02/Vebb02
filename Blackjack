@@ -1,0 +1,192 @@
+string[,] cards = new string[4, 13]
+{ {"ace of clubs", "two of clubs", "three of clubs", "four of clubs", "five of clubs", "six of clubs", "seven of clubs",
+    "eight of clubs", "nine of clubs", "ten of clubs", "jack of clubs", "queen of clubs", "king of clubs"}, {"ace of diamonds",
+        "two of diamonds", "three of diamonds", "four of diamonds", "five of diamonds", "six of diamonds", "seven of diamonds",
+    "eight of diamonds", "nine of diamonds", "ten of diamonds", "jack of diamonds", "queen of diamonds", "king of diamonds" },
+    {"ace of hearts", "two of hearts", "three of hearts", "four of hearts", "five of hearts", "six of hearts", "seven of hearts",
+    "eight of hearts", "nine of hearts", "ten of hearts", "jack of hearts", "queen of hearts", "king of hearts"  },
+    {"ace of spades", "two of spades", "three of spades", "four of spades", "five of spades", "six of spades", "seven of spades",
+    "eight of spades", "nine of spades", "ten of spades", "jack of spades", "queen of spades", "king of spades"  } };
+//Console.WriteLine(cards[3, 12]);
+bool proceed = false;
+int currentValue = 0;
+int currentValue1 = 0;
+int randomNum = 0;
+int randomNum1 = 0;
+int randomNum2 = 0;
+int randomNum3 = 0;
+bool hit = false;
+string hitOrStand;
+bool storeCards = true;
+string firstCard = "blank";
+bool stand = false;
+bool bust = false;
+bool playAgain = true;
+string playOrNot = "blank";
+bool wrongAnswer = false;
+do
+{
+    currentValue = 0;
+    currentValue1 = 0;
+    bust = false;
+    for (int startingGameCards = 0; startingGameCards < 2; startingGameCards++)
+    {
+        Random rd = new();
+        randomNum = rd.Next(0, 4);
+        Random rd1 = new();
+        randomNum1 = rd1.Next(0, 13);
+
+        Random rd2 = new();
+        randomNum2 = rd2.Next(0, 4);
+        Random rd3 = new();
+        randomNum3 = rd3.Next(0, 13);
+        Console.WriteLine(cards[randomNum, randomNum1]);
+        if (randomNum1 == 0 && currentValue + 11 <= 21)
+
+        {
+            currentValue += 11;
+        }
+        else if (randomNum == 0 && currentValue + 11 > 21)
+        {
+            currentValue++;
+        }
+        else if (randomNum1 >= 10)
+        {
+            currentValue += 10;
+        }
+        else
+        {
+            currentValue = (currentValue + 1 + randomNum1);
+        }
+        if (currentValue > 21)
+        {
+            hit = false;
+        }
+        else if (currentValue == 21)
+        {
+            Console.WriteLine("Blackjack!");
+            hit = false;
+        }
+        if (randomNum2 == 0 && currentValue1 + 11 < 21)
+        {
+            currentValue1 += 11;
+        }
+        else if (randomNum2 == 0 && currentValue1 + 11 > 21)
+        {
+            currentValue1++;
+        }
+        else
+        {
+            currentValue1 = (currentValue1 + 1 + randomNum2);
+        }
+        if (storeCards == true)
+        {
+            firstCard = (cards[randomNum2, randomNum3]);
+            storeCards = false;
+        }
+    }
+    Console.WriteLine("You have " + currentValue + " points");
+    Console.WriteLine("Dealer has " + cards[randomNum2, randomNum3]);
+
+    do
+    {
+        Console.WriteLine("Hit or stand?");
+        do
+        {
+            stand = false;
+            hitOrStand = (Console.ReadLine());
+            proceed = false;
+
+            if (hitOrStand == "hit")
+            {
+                hit = true;
+                proceed = true;
+
+            }
+            else if (hitOrStand == "stand")
+            {
+                hit = false;
+                proceed = true;
+                stand = true;
+
+            }
+            else
+            {
+                Console.WriteLine("Didn't quite understand you there. Please enter hit or stand");
+            }
+        } while (proceed == false);
+        if (stand == false)
+        {
+            Random rd = new();
+            randomNum = rd.Next(0, 4);
+            Random rd1 = new();
+            randomNum1 = rd1.Next(0, 13);
+            Console.WriteLine(cards[randomNum, randomNum1]);
+            if (randomNum1 == 0 && currentValue + 11 <= 21)
+
+            {
+                currentValue += 11;
+            }
+            else if (randomNum == 0 && currentValue + 11 > 21)
+            {
+                currentValue++;
+            }
+            else if (randomNum1 >= 10)
+            {
+                currentValue += 10;
+            }
+            else
+            {
+                currentValue = (currentValue + 1 + randomNum1);
+            }
+            Console.WriteLine("You have " + currentValue + " points");
+            if (currentValue > 21)
+            {
+                Console.WriteLine("That's a bust...");
+                hit = false;
+                bust = true;
+            }
+            else if (currentValue == 21)
+            {
+                Console.WriteLine("Blackjack!");
+                hit = false;
+            }
+        }
+    } while (hit == true);
+    Console.WriteLine("Dealer has " + cards[randomNum2, randomNum3] + " and " + firstCard);
+    Console.WriteLine("Dealer points:\t" + currentValue1);
+    if (currentValue < currentValue1)
+    {
+        bust = true;
+    }
+
+    if (bust == true)
+    {
+        Console.WriteLine("You lost...");
+    }
+    else
+    {
+        Console.WriteLine("You won!");
+    }
+    Console.WriteLine("Want to play again?");
+    playOrNot = Console.ReadLine();
+    do
+    {
+        if (playOrNot == "yes")
+        {
+            playAgain = true;
+        }
+        else if (playOrNot != "no")
+        {
+            wrongAnswer = true;
+            Console.WriteLine("Didn't quite understand you there. Please enter yes or no");
+        }
+        else
+        {
+            playAgain = false;
+        }
+    } while (wrongAnswer == true);
+
+} while (playAgain == true);
+Console.WriteLine("Bye!");
+Console.ReadLine();
