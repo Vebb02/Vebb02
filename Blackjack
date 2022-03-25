@@ -7,28 +7,36 @@ string[,] cards = new string[4, 13]
     "eight of hearts", "nine of hearts", "ten of hearts", "jack of hearts", "queen of hearts", "king of hearts"  },
     {"ace of spades", "two of spades", "three of spades", "four of spades", "five of spades", "six of spades", "seven of spades",
     "eight of spades", "nine of spades", "ten of spades", "jack of spades", "queen of spades", "king of spades"  } };
-//Console.WriteLine(cards[3, 12]);
-bool proceed = false;
-int currentValue = 0;
-int currentValue1 = 0;
-int randomNum = 0;
-int randomNum1 = 0;
-int randomNum2 = 0;
-int randomNum3 = 0;
-bool hit = false;
-string hitOrStand;
-bool storeCards = true;
-string firstCard = "blank";
-bool stand = false;
-bool bust = false;
-bool playAgain = true;
-string playOrNot = "blank";
-bool wrongAnswer = false;
+    bool proceed = false;
+    int currentValue = 0;
+    int currentValue1 = 0;
+    int randomNum = 0;
+    int randomNum1 = 0;
+    int randomNum2 = 0;
+    int randomNum3 = 0;
+    bool hit = false;
+    string hitOrStand;
+    bool storeCards = true;
+    string firstCard = "blank";
+    bool stand = false;
+    bool bust = false;
+    bool playAgain = true;
+    string playOrNot = "blank";
+    bool wrongAnswer = false;
+    bool earlyJack = false;
+    decimal wins = 0;
+    decimal games = 0;
+    decimal winPercentage = 0;
+    string winString = "blank";
+
+//the entire loop
 do
 {
+    storeCards = true;
     currentValue = 0;
     currentValue1 = 0;
     bust = false;
+    //starting sequence
     for (int startingGameCards = 0; startingGameCards < 2; startingGameCards++)
     {
         Random rd = new();
@@ -41,6 +49,7 @@ do
         Random rd3 = new();
         randomNum3 = rd3.Next(0, 13);
         Console.WriteLine(cards[randomNum, randomNum1]);
+        Thread.Sleep(200);
         if (randomNum1 == 0 && currentValue + 11 <= 21)
 
         {
@@ -65,19 +74,24 @@ do
         else if (currentValue == 21)
         {
             Console.WriteLine("Blackjack!");
-            hit = false;
+            Thread.Sleep(200);
+            earlyJack = true;
         }
-        if (randomNum2 == 0 && currentValue1 + 11 < 21)
+        if (randomNum3 == 0 && currentValue1 + 11 <= 21)
         {
             currentValue1 += 11;
         }
-        else if (randomNum2 == 0 && currentValue1 + 11 > 21)
+        else if (randomNum3 == 0 && currentValue1 + 11 > 21)
         {
             currentValue1++;
         }
-        else
+        else if (randomNum3 <= 9)
         {
-            currentValue1 = (currentValue1 + 1 + randomNum2);
+            currentValue1 = (currentValue1 + 1 + randomNum3);
+        }
+        else if (randomNum3 >= 10)
+        {
+            currentValue1 += 10;
         }
         if (storeCards == true)
         {
@@ -86,75 +100,88 @@ do
         }
     }
     Console.WriteLine("You have " + currentValue + " points");
+    Thread.Sleep(200);
     Console.WriteLine("Dealer has " + cards[randomNum2, randomNum3]);
-
-    do
+    Thread.Sleep(200);
+    //hit or stand
+    if (earlyJack == false)
     {
-        Console.WriteLine("Hit or stand?");
         do
         {
-            stand = false;
-            hitOrStand = (Console.ReadLine());
-            proceed = false;
+            Console.WriteLine("Hit or stand?");
+            Thread.Sleep(200);
+            do
+            {
+                stand = false;
+                hitOrStand = (Console.ReadLine());
+                proceed = false;
 
-            if (hitOrStand == "hit")
-            {
-                hit = true;
-                proceed = true;
+                if (hitOrStand == "hit")
+                {
+                    hit = true;
+                    proceed = true;
 
-            }
-            else if (hitOrStand == "stand")
-            {
-                hit = false;
-                proceed = true;
-                stand = true;
+                }
+                else if (hitOrStand == "stand")
+                {
+                    hit = false;
+                    proceed = true;
+                    stand = true;
 
-            }
-            else
+                }
+                else
+                {
+                    Console.WriteLine("Didn't quite understand you there. Please enter hit or stand");
+                    Thread.Sleep(200);
+                }
+            } while (proceed == false);
+            if (stand == false)
             {
-                Console.WriteLine("Didn't quite understand you there. Please enter hit or stand");
-            }
-        } while (proceed == false);
-        if (stand == false)
-        {
-            Random rd = new();
-            randomNum = rd.Next(0, 4);
-            Random rd1 = new();
-            randomNum1 = rd1.Next(0, 13);
-            Console.WriteLine(cards[randomNum, randomNum1]);
-            if (randomNum1 == 0 && currentValue + 11 <= 21)
+                Random rd = new();
+                randomNum = rd.Next(0, 4);
+                Random rd1 = new();
+                randomNum1 = rd1.Next(0, 13);
+                Console.WriteLine(cards[randomNum, randomNum1]);
+                Thread.Sleep(200);
+                if (randomNum1 == 0 && currentValue + 11 <= 21)
 
-            {
-                currentValue += 11;
+                {
+                    currentValue += 11;
+                }
+                else if (randomNum1 == 0 && currentValue + 11 > 21)
+                {
+                    currentValue++;
+                }
+                else if (randomNum1 >= 9)
+                {
+                    currentValue += 10;
+                }
+                else if (randomNum1 <= 9)
+                {
+                    currentValue = (currentValue + 1 + randomNum1);
+                }
+                Console.WriteLine("You have " + currentValue + " points");
+                Thread.Sleep(200);
+                if (currentValue > 21)
+                {
+                    Console.WriteLine("That's a bust...");
+                    Thread.Sleep(200);
+                    hit = false;
+                    bust = true;
+                }
+                else if (currentValue == 21)
+                {
+                    Console.WriteLine("Blackjack!");
+                    Thread.Sleep(200);
+                    hit = false;
+                }
             }
-            else if (randomNum == 0 && currentValue + 11 > 21)
-            {
-                currentValue++;
-            }
-            else if (randomNum1 >= 10)
-            {
-                currentValue += 10;
-            }
-            else
-            {
-                currentValue = (currentValue + 1 + randomNum1);
-            }
-            Console.WriteLine("You have " + currentValue + " points");
-            if (currentValue > 21)
-            {
-                Console.WriteLine("That's a bust...");
-                hit = false;
-                bust = true;
-            }
-            else if (currentValue == 21)
-            {
-                Console.WriteLine("Blackjack!");
-                hit = false;
-            }
-        }
-    } while (hit == true);
+        } while (hit == true);
+    }
     Console.WriteLine("Dealer has " + cards[randomNum2, randomNum3] + " and " + firstCard);
+    Thread.Sleep(200);
     Console.WriteLine("Dealer points:\t" + currentValue1);
+    Thread.Sleep(200);
     if (currentValue < currentValue1)
     {
         bust = true;
@@ -163,15 +190,33 @@ do
     if (bust == true)
     {
         Console.WriteLine("You lost...");
+        Thread.Sleep(200);
+    }
+    else if (currentValue == currentValue1)
+    {
+        Console.WriteLine("That's a tie");
+        Thread.Sleep(200);
     }
     else
     {
         Console.WriteLine("You won!");
+        Thread.Sleep(200);
+        wins++;
+
     }
+    games++;
+    winPercentage = ((wins / games) * 100);
+    winString = decimal.Round(winPercentage, 2, MidpointRounding.AwayFromZero).ToString();
+    Console.WriteLine("You have " + wins + " wins");
+    Thread.Sleep(200);
+    Console.WriteLine("Your win percantage is " + winString + "%");
+    Thread.Sleep(200);
     Console.WriteLine("Want to play again?");
+    Thread.Sleep(200);
     playOrNot = Console.ReadLine();
     do
     {
+        wrongAnswer = false;
         if (playOrNot == "yes")
         {
             playAgain = true;
@@ -180,13 +225,17 @@ do
         {
             wrongAnswer = true;
             Console.WriteLine("Didn't quite understand you there. Please enter yes or no");
+            Thread.Sleep(200);
         }
         else
         {
             playAgain = false;
         }
     } while (wrongAnswer == true);
-
+    if (playAgain == true)
+        {
+        Console.WriteLine("\n");
+        }
 } while (playAgain == true);
 Console.WriteLine("Bye!");
 Console.ReadLine();
