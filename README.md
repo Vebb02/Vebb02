@@ -1,5 +1,5 @@
 ## Velkommen
-[Nettsiden min](https://vebb02.github.io/)
+[Nettsiden min](https://voiestad.no/)
 <!--
 **Vebb02/Vebb02** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
